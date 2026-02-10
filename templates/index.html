@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Fraud</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e6f7ff;
+        }
+
+        .navbar {
+            background-color: #00aaff;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+            padding: 6px 12px;
+            background-color: #0077cc;
+            border-radius: 5px;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        input {
+            padding: 8px;
+            margin: 8px;
+            width: 250px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .fraud {
+            background-color: #ffcccc;
+            color: #cc0000;
+            border: 2px solid #cc0000;
+        }
+
+        .legitimate {
+            background-color: #ccffcc;
+            color: #008000;
+            border: 2px solid #008000;
+        }
+
+        .error {
+            background-color: #ffe6cc;
+            color: #ff6600;
+            border: 2px solid #ff6600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/predict">Predict</a>
+    </div>
+
+    <div class="container">
+        <h1>Enter Transaction Details</h1>
+
+        <form id="predictionForm">
+            <input type="number" name="transaction_amount" id="transaction_amount" 
+                   placeholder="Transaction Amount" step="0.01" required><br>
+            <input type="text" name="transaction_type" id="transaction_type" 
+                   placeholder="Transaction Type" required><br>
+            <input type="number" name="account_balance" id="account_balance" 
+                   placeholder="Account Balance" step="0.01" required><br>
+            <input type="text" name="location" id="location" 
+                   placeholder="Location" required><br>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const resultDiv = document.getElementById('result');
+            
+            // Show loading message
+            resultDiv.style.display = 'block';
+            resultDiv.className = '';
+            resultDiv.innerHTML = 'Processing...';
+            
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultDiv.className = 'error';
+                    resultDiv.innerHTML = '<h2>Error</h2><p>' + data.error + '</p>';
+                } else {
+                    const predictionClass = data.prediction === 'Fraudulent' ? 'fraud' : 'legitimate';
+                    resultDiv.className = predictionClass;
+                    resultDiv.innerHTML = `
+                        <h2>Prediction: ${data.prediction}</h2>
+                        <p><strong>Transaction Amount:</strong> $${data.transaction_amount}</p>
+                        <p><strong>Transaction Type:</strong> ${data.transaction_type}</p>
+                        <p><strong>Account Balance:</strong> $${data.account_balance}</p>
+                        <p><strong>Location:</strong> ${data.location}</p>
+                    `;
+                }
+            })
+            .catch(error => {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = '<h2>Error</h2><p>Failed to make prediction: ' + error.message + '</p>';
+            });
+        });
+    </script>
+
+</body>
+</html>

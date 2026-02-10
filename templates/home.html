@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Payments Fraud Detection</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #e6f7ff;
+        }
+
+        .navbar {
+            background-color: #00aaff;
+            padding: 10px;
+            text-align: right;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px;
+            padding: 6px 12px;
+            background-color: #0077cc;
+            border-radius: 5px;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            color: black;
+        }
+
+        p {
+            width: 70%;
+            margin: auto;
+            font-size: 16px;
+        }
+
+        img {
+            width: 400px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/predict">Predict</a>
+    </div>
+
+    <div class="container">
+        <h1>Online Payments Fraud Detection</h1>
+
+        <p>
+            The objective of this project is to predict online payment fraud using
+            various parameters. This is a classification problem where the target
+            variable is fraud. We use machine learning algorithms like Decision Tree,
+            Random Forest, SVM, and Extra Trees Classifier to train and test the data.
+        </p>
+
+        <!-- IMAGE -->
+        <img src="{{ url_for('static', filename='fraud.png') }}" alt="Fraud Detection Image">
+
+    </div>
+
+</body>
+</html>
